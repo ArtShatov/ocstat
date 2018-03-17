@@ -42,12 +42,6 @@ foreach ($head as &$year) {
 	ksort($year['month']);
 }
 unset($year);
-
-
-//echo '<pre>';
-//print_r($head);
-//echo '</pre>';
-
 ?>
 <style type="text/css">
     .t-abs{
@@ -62,10 +56,10 @@ unset($year);
         <h3 class="panel-title"><i class="fa fa-calendar"></i> <?php echo $heading_title; ?></h3>
     </div>
 
-    <table cellpadding="5" cellspacing="0" border="0" class="table table-bordered table-striped table-responsive table-condensed">
+    <table cellpadding="5" cellspacing="0" border="0" class="table table-bordered table-striped table-responsive">
         <thead>
             <tr>
-                <th rowspan="2" class="text-center">Статусы</th>
+                <th rowspan="2" class="text-center"><?php echo $text_order_status;?></th>
                 <?php foreach ($head as $year) : ?>
                     <th colspan="<?=count($year['month']);?>" class="text-center"><?=$year['year']?></th>
                 <?php endforeach; ?>
@@ -86,7 +80,7 @@ unset($year);
                         <?php foreach ($year['month'] as $month) : ?>
                             <td class="text-right">
                                 <?php if (isset($row[$year['year']][$month])) : ?>
-                                    <span class="t-rel"><?php echo round($row[$year['year']][$month] / $totals[$year['year'] . ':' . $month] , 2); ?></span><br />
+                                    <span class="t-rel"><?php echo round($row[$year['year']][$month] / $totals[$year['year'] . ':' . $month] * 100 ) ; ?>%</span><br />
                                     <span class="t-abs"><?php echo $row[$year['year']][$month];?></span>
                                 <?php else : ?>
                                     -
@@ -99,7 +93,7 @@ unset($year);
         </tbody>
         <tfoot>
             <tr>
-                <th>Итого:</th>
+                <th><?php echo $text_total; ?></th>
 		        <?php foreach ($head as $year) : ?>
 			        <?php foreach ($year['month'] as $month) : ?>
                         <td class="text-right"><?php echo $totals[$year['year'] . ':' . $month];?></td>
@@ -109,7 +103,7 @@ unset($year);
             <tr>
 	            <?php $colspan = 0; foreach ($head as $y) $colspan += count($y['month']);?>
                 <td colspan="<?=$colspan;?>">
-                    Легенда: <span class="t-rel">Доля от всех</span>, <span class="t-abs">Абсолютное значение</span>
+                    <?php echo $text_legend;?> <span class="t-rel"><?php echo $text_percent; ?></span>, <span class="t-abs"><?php echo $text_absolute;?></span>
                 </td>
             </tr>
         </tfoot>

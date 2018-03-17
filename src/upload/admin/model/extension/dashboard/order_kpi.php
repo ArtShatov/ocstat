@@ -10,12 +10,21 @@
 class ModelExtensionDashboardOrderKpi extends Model {
 	public function getOrdersByStatuses($start_date, $currency) {
 
+		if (!isset($start_date)) {
+			throw new Exception('start_date not set');
+		}
+
+		if (!isset($currency)) {
+			throw new Exception('Currency not set');
+		}
+
 		$sql = '
 			SELECT 
 				o.order_status_id, 
 				year(o.date_added) as `year`,
 				month(o.date_added) as `month`,
 				count(*) as `count`
+				
 			FROM 
 				' . DB_PREFIX . 'order o
 			WHERE

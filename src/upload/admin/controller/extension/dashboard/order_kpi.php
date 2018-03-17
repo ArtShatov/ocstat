@@ -9,6 +9,7 @@
 /** @property \Cart\Currency currency */
 /** @property Config config */
 class ControllerExtensionDashboardOrderKpi extends Controller {
+
 	public function index() {
 		$this->load->language('extension/dashboard/order_kpi');
 

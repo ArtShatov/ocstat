@@ -1,17 +1,24 @@
 <?php
 // Heading
-$_['heading_title'] = 'Перетекания заказов по статусам';
+$_['heading_title']    = 'Order Status Statistics';
 
 // Text
-$_['text_extension']   = 'Панель управления';
-$_['text_success']     = 'Панель продаж успешно изменена!';
-$_['text_edit']        = 'Редактировать';
-$_['text_view']        = 'Подробнее...';
+$_['text_extension']   = 'Extensions';
+$_['text_success']     = 'Success: You have modified dashboard online!';
+$_['text_edit']        = 'Edit Dashboard Online';
+$_['text_view']        = 'View more...';
+
+$_['text_order_status'] = 'Order Status';
+$_['text_total'] = 'Total:';
+$_['text_legend'] = 'Legend:';
+$_['text_percent'] = 'percent';
+$_['text_absolute'] = 'absolute value';
+
 
 // Entry
-$_['entry_status']     = 'Статус';
-$_['entry_sort_order'] = 'Сортировка';
-$_['entry_width']      = 'Ширина';
+$_['entry_status']     = 'Status';
+$_['entry_sort_order'] = 'Sort Order';
+$_['entry_width']      = 'Width';
 
 // Error
-$_['error_permission'] = 'У вас нет прав для управления этим модулем!';
+$_['error_permission'] = 'Warning: You do not have permission to modify dashboard online!';
