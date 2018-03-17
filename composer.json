@@ -1,0 +1,13 @@
+{
+    "name": "shatov.ru/ocstat",
+    "description": "Simple stat for opencart cms",
+    "authors": [
+        {
+            "name": "Артем Шатов",
+            "email": "artshatov@gmail.com"
+        }
+    ],
+    "require": {
+        "opencart/opencart": "2.3.0.2"
+    }
+}
