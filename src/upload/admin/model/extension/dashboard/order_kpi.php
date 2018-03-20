@@ -29,7 +29,7 @@ class ModelExtensionDashboardOrderKpi extends Model {
 				' . DB_PREFIX . 'order o
 			WHERE
 				o.order_status_id > 0
-				and o.date_added > \'' . $this->db->query($start_date) . '\'
+				and o.date_added > \'' . $this->db->escape($start_date) . '\'
 			GROUP BY 
 				o.order_status_id, `year`, `month`';
 
