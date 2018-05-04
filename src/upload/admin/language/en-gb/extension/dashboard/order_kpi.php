@@ -9,10 +9,11 @@ $_['text_edit']        = 'Edit Dashboard Online';
 $_['text_view']        = 'View more...';
 
 $_['text_order_status'] = 'Order Status';
-$_['text_total'] = 'Total:';
-$_['text_legend'] = 'Legend:';
-$_['text_percent'] = 'percent';
-$_['text_absolute'] = 'absolute value';
+$_['text_total']        = 'Total:';
+$_['text_legend']       = 'Legend:';
+$_['text_percent']      = 'percent';
+$_['text_absolute']     = 'absolute value';
+$_['text_sum']          = 'amount of orders';
 
 
 // Entry
