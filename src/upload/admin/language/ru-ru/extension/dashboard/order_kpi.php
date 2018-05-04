@@ -13,6 +13,7 @@ $_['text_total']        = 'Итого:';
 $_['text_legend']       = 'Легенда:';
 $_['text_percent']      = 'В процентах';
 $_['text_absolute']     = 'Количество';
+$_['text_sum']          = 'Сумма заказов';
 
 
 // Entry

@@ -103,18 +103,83 @@ class ControllerExtensionDashboardOrderKpi extends Controller {
 
 		return !$this->error;
 	}
+	private function convertData($data) {
+
+		$head = array();
+		$rows = array();
+		$totals = array();
+
+
+		foreach ($data as &$year) {
+			if (!isset($head[$year['year']])) {
+				$head[$year['year']] = array();
+				$head[$year['year']]['month'] = array();
+
+			}
+
+			$total_key = $year['year'] . ':'  . $year['month'];
+			if (!isset($totals[$total_key])) {
+				$totals[$total_key] = array(
+					'count' => 0,
+					'sum' => 0
+				);
+			}
+
+			$totals[$total_key]['count'] += $year['count'];
+			$totals[$total_key]['sum']   += $year['sum'];
+
+			$head[$year['year']]['year'] = $year['year'];
+			$head[$year['year']]['month'][$year['month']] = $year['month'];
+
+			$row_key = $year['order_status_id'];
+			if(!isset($rows[$row_key])) {
+				$rows[$row_key] = array();
+				$rows[$row_key]['total'] = 0;
+			}
+			$rows[$row_key]['order_status_id'] = $year['order_status_id'];
+			$rows[$row_key]['total'] += $year['count'];
+
+			if(!isset($rows[$row_key][$year['year']])) {
+				$rows[$row_key][$year['year']] = array();
+			}
+			$rows[$row_key][$year['year']][$year['month']] = array(
+				'count' => $year['count'],
+				'sum' =>   round($year['sum'])
+			);
+		}
+		unset($year);
+
+		ksort($head);
+		foreach ($head as &$year) {
+			ksort($year['month']);
+		}
+		unset($year);
+
+		return array(
+			'head' => $head,
+			'rows' => $rows,
+			'totals' => $totals
+		);
+	}
 
 	public function dashboard() {
 		$this->load->language('extension/dashboard/order_kpi');
+		/** @var array(
+		 *  'order_statuses' => array()
+		 *  'rows' => array(),
+		 *  'total' => array(),
+		 *  'head' => array()
+		 * ) $data */
 		$data = array();
+
+
 		$data['heading_title'] = $this->language->get('heading_title');
 		$data['text_order_status'] = $this->language->get('text_order_status');
 		$data['text_total'] = $this->language->get('text_total');
 		$data['text_percent'] = $this->language->get('text_percent');
 		$data['text_legend'] = $this->language->get('text_legend');
 		$data['text_absolute'] = $this->language->get('text_absolute');
-
-
+		$data['text_sum'] = $this->language->get('text_sum');
 
 		$this->load->model('extension/dashboard/order_kpi');
 		/** @var ModelExtensionDashboardOrderKpi $model */
@@ -123,8 +188,12 @@ class ControllerExtensionDashboardOrderKpi extends Controller {
 		$default_currency = $this->config->get('config_currency');
 		$start_date = date("Y-m-01 00:00:00" , strtotime("-5 month"));
 
-		$data['data'] = $model->getOrdersByStatuses($start_date, $default_currency);;
+		$rows = $model->getOrdersByStatuses($start_date, $default_currency);
+		$data = array_merge($data , $this->convertData($rows));
+
 		$data['order_statuses'] = $model->getStatuses();
+
+
 		return $this->load->view('extension/dashboard/order_kpi_info', $data);
 	}
 }
