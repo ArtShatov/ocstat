@@ -16,6 +16,8 @@ class ModelExtensionDashboardOrderKpi extends Model {
 		if (!isset($currency_code)) {
 			throw new Exception('Currency not set');
 		}
+
+		$order_statuses = array_map('intval', $order_statuses);
 		
 		$sql = 'SELECT `value` FROM oc_currency WHERE `code` = "' . $this->db->escape($currency_code) . '"';
 		$res = $this->db->query($sql);
