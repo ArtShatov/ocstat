@@ -33,7 +33,7 @@
         <tbody>
             <?php foreach ($rows as $row) : ?>
                 <tr>
-                    <td><?=$order_statuses[$row['order_status_id']];?></td>
+                    <td><a href="<?php echo $row['href']; ?>"><?=$order_statuses[$row['order_status_id']];?></a></td>
                     <?php foreach ($head as $year) : ?>
                         <?php foreach ($year['month'] as $month) : ?>
                             <td class="text-right">
