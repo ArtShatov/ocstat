@@ -38,7 +38,32 @@
                 <?php } ?>
               </select>
             </div>
-          </div>     
+          </div>
+
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-filter"><?php echo $entry_statuses; ?></label>
+            <div class="col-sm-10">
+              <ul id="order-statuses-list" class="well well-sm">
+                <?php foreach ($order_statuses as $order_status) { ?>
+                <li>
+                  <i class="fa fa-fw fa-sort"></i>
+                  <label>
+                    <input type="checkbox" name="tt" value="1" <?php if($order_status['active']) { ?> checked <?php } ?> class="js-change-status" />
+                    <input type="hidden" name="dashboard_order_kpi_order_statuses[<?php echo $order_status['order_status_id']; ?>]" value="<?php echo $order_status['active'] ? 1 : 0; ?>" />
+                    <?php echo $order_status['name']; ?>
+                  </label>
+                </li>
+
+                <?php } ?>
+              </ul>
+
+              <a onclick="$(this).parent().find(':checkbox').prop('checked', true).trigger('change');"><?php echo $text_select_all; ?></a> / <a onclick="$(this).parent().find(':checkbox').prop('checked', false).trigger('change');"><?php echo $text_unselect_all; ?></a>
+
+          </div>
+          </div>
+
+
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
             <div class="col-sm-10">
@@ -64,4 +89,30 @@
     </div>
   </div>
 </div>
+
+<script>
+  $(function() {
+      $('#order-statuses-list').sortable({
+          items:  '> li'
+      });
+
+      $('.js-change-status').on('change', function() {
+         var $checkbox = $(this);
+         var value = $checkbox.is(":checked") ? 1 : 0;
+         $checkbox.parent().find('input[type=hidden]').val(value);
+
+      });
+  });
+</script>
+
+<style>
+  #order-statuses-list {
+    list-style-type: none;
+    height: 250px;
+    overflow: auto;
+  }
+  #order-statuses-list .fa {
+    cursor: pointer;
+  }
+</style>
 <?php echo $footer; ?>

@@ -13,6 +13,9 @@ class ControllerExtensionDashboardOrderKpi extends Controller {
 	public function index() {
 		$this->load->language('extension/dashboard/order_kpi');
 
+        	$this->document->addScript('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js');
+
+
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('setting/setting');
@@ -30,10 +33,16 @@ class ControllerExtensionDashboardOrderKpi extends Controller {
 		$data['text_edit'] = $this->language->get('text_edit');
 		$data['text_enabled'] = $this->language->get('text_enabled');
 		$data['text_disabled'] = $this->language->get('text_disabled');
+		$data['text_select_all'] = $this->language->get('text_select_all');
+        $data['text_unselect_all'] = $this->language->get('text_unselect_all');
+
+
+
 
 		$data['entry_width'] = $this->language->get('entry_width');
 		$data['entry_status'] = $this->language->get('entry_status');
 		$data['entry_sort_order'] = $this->language->get('entry_sort_order');
+		$data['entry_statuses'] = $this->language->get('entry_statuses');
 
 		$data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
@@ -89,6 +98,53 @@ class ControllerExtensionDashboardOrderKpi extends Controller {
 			$data['dashboard_order_kpi_sort_order'] = $this->config->get('dashboard_order_kpi_sort_order');
 		}
 
+
+
+		if (isset($this->request->post['dashboard_order_kpi_order_statuses'])) {
+		    $data['dashboard_order_kpi_order_statuses'] = $this->request->post['dashboard_order_kpi_order_statuses'];
+		} else {
+		    $data['dashboard_order_kpi_order_statuses'] = $this->config->get('dashboard_order_kpi_order_statuses');
+		}
+
+		if(!$data['dashboard_order_kpi_order_statuses'] || !is_array($data['dashboard_order_kpi_order_statuses'])) {
+			    $data['dashboard_order_kpi_order_statuses'] = array();
+		}
+
+		$this->load->model('localisation/order_status');
+		$filter_data = array();
+		$statuses = $this->model_localisation_order_status->getOrderStatuses($filter_data);
+
+
+		$data['order_statuses'] = array();
+		foreach($statuses as $status) {
+		    $key = $status['order_status_id'];
+		    if(!isset($data['dashboard_order_kpi_order_statuses'][$key])) {
+		        $data['dashboard_order_kpi_order_statuses'][$key] = 1;
+		    }
+		}
+
+
+
+
+		foreach($data['dashboard_order_kpi_order_statuses'] as $order_status_id => $is_active) {
+		    $order_status = false;
+		    foreach($statuses as $status) {
+		        if($status['order_status_id'] == $order_status_id) {
+		            $order_status = $status;
+		            break;
+		        }
+		    }
+
+		    if(!$order_status) {
+		        continue;
+		    }
+
+		    $data['order_statuses'][] = array(
+		        'order_status_id' => $order_status_id,
+		        'active' => $is_active,
+		        'name' => $order_status['name']
+		    );
+		}
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
 		$data['footer'] = $this->load->controller('common/footer');
@@ -138,6 +194,7 @@ class ControllerExtensionDashboardOrderKpi extends Controller {
 			}
 			$rows[$row_key]['order_status_id'] = $year['order_status_id'];
 			$rows[$row_key]['total'] += $year['count'];
+            		$rows[$row_key]['href'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] .  '&filter_order_status='. $year['order_status_id'], true);
 
 			if(!isset($rows[$row_key][$year['year']])) {
 				$rows[$row_key][$year['year']] = array();
@@ -188,7 +245,18 @@ class ControllerExtensionDashboardOrderKpi extends Controller {
 		$default_currency = $this->config->get('config_currency');
 		$start_date = date("Y-m-01 00:00:00" , strtotime("-5 month"));
 
-		$rows = $model->getOrdersByStatuses($start_date, $default_currency);
+		$order_statuses = array();
+		$order_statuses_from_settings = $this->config->get('dashboard_order_kpi_order_statuses');
+		if($order_statuses_from_settings && is_array($order_statuses_from_settings)) {
+		    foreach($order_statuses_from_settings as $order_status_id => $value) {
+		        if($value) {
+		            $order_statuses[] = $order_status_id;
+		        }
+		    }
+		}
+		
+
+		$rows = $model->getOrdersByStatuses($start_date, $default_currency, $order_statuses);
 		$data = array_merge($data , $this->convertData($rows));
 
 		$data['order_statuses'] = $model->getStatuses();
