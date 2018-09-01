@@ -20,6 +20,7 @@ $_['text_sum']          = 'Сумма заказов';
 $_['entry_status']     = 'Статус';
 $_['entry_sort_order'] = 'Сортировка';
 $_['entry_width']      = 'Ширина';
+$_['entry_statuses']   = 'Статусы';
 
 // Error
 $_['error_permission'] = 'У вас нет прав для управления этим модулем!';
