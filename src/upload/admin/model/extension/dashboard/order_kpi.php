@@ -19,7 +19,7 @@ class ModelExtensionDashboardOrderKpi extends Model {
 
 		$order_statuses = array_map('intval', $order_statuses);
 		
-		$sql = 'SELECT `value` FROM oc_currency WHERE `code` = "' . $this->db->escape($currency_code) . '"';
+		$sql = 'SELECT `value` FROM ' . DB_PREFIX . 'currency WHERE `code` = "' . $this->db->escape($currency_code) . '"';
 		$res = $this->db->query($sql);
 		if ($res->num_rows == 0) {
 			throw new Exception('Currency with code "' . $currency_code . '" not exists');
